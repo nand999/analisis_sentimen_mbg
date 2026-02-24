@@ -66,18 +66,48 @@ def load_data():
 
 @st.cache_resource
 def load_model():
-    """Load model yang sudah dilatih"""
-    try:
-        model_path = os.path.join(BASE_DIR, 'sentiment_model.pkl')
-        analyzer = SentimentAnalyzer()
-        analyzer.load_model(model_path)
-        return analyzer
-    except FileNotFoundError:
-        st.error(f"Model tidak ditemukan di: {os.path.join(BASE_DIR, 'sentiment_model.pkl')}. Jalankan sentiment_model.py terlebih dahulu.")
-        return None
-    except Exception as e:
-        st.error(f"Error memuat model: {str(e)}")
-        return None
+    """Load model yang sudah dilatih, atau latih ulang jika pkl tidak valid"""
+    analyzer = SentimentAnalyzer()
+    model_path = os.path.join(BASE_DIR, 'sentiment_model.pkl')
+    data_path  = os.path.join(BASE_DIR, 'data_mbg_labelled.csv')
+
+    # --- Coba load dari pkl ---
+    pkl_loaded_ok = False
+    if os.path.exists(model_path):
+        try:
+            analyzer.load_model(model_path)
+            if hasattr(analyzer.vectorizer, 'idf_'):
+                pkl_loaded_ok = True
+        except Exception:
+            pass   # pkl rusak / versi berbeda → akan retrain
+
+    # --- Fallback: latih ulang dari data CSV ---
+    if not pkl_loaded_ok:
+        if not os.path.exists(data_path):
+            st.error(
+                f"❌ File model ({model_path}) tidak valid DAN "
+                f"dataset ({data_path}) tidak ditemukan. "
+                "Pastikan kedua file sudah di-commit ke GitHub."
+            )
+            return None
+        
+        st.warning(
+            "⚠️ File model tidak kompatibel dengan versi scikit-learn saat ini. "
+            "Melatih ulang model dari dataset... (proses ini hanya terjadi sekali)"
+        )
+        try:
+            df = analyzer.load_and_preprocess_data(data_path)
+            analyzer.train_and_evaluate_model(df)
+            # Simpan pkl baru agar berikutnya langsung bisa di-load
+            try:
+                analyzer.save_model(model_path)
+            except Exception:
+                pass  # Jika tidak bisa menyimpan (read-only fs), abaikan
+        except Exception as e:
+            st.error(f"❌ Gagal melatih model: {str(e)}")
+            return None
+
+    return analyzer
 
 def create_pie_chart(df):
     """Membuat pie chart distribusi sentimen"""
