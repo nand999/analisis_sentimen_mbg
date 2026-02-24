@@ -46,7 +46,7 @@ Aplikasi web berbasis Streamlit untuk melakukan analisis sentimen terhadap teks 
 
 1. Clone repository:
 ```bash
-git clone https://github.com/nand999/analisis-sentimen-mbg-svm.git
+git clone https://github.com/nand999/analisis-sentimen-mbg.git
 cd analisis-sentimen-mbg
 ```
 

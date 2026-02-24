@@ -10,7 +10,10 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 import nltk
 import warnings
+import os
 warnings.filterwarnings('ignore')
+
+nltk.data.path.append(os.path.join(os.getcwd(), "nltk_data"))
 
 # Download NLTK requirements
 try:
