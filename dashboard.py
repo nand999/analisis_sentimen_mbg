@@ -91,10 +91,6 @@ def load_model():
             )
             return None
         
-        st.warning(
-            "⚠️ File model tidak kompatibel dengan versi scikit-learn saat ini. "
-            "Melatih ulang model dari dataset... (proses ini hanya terjadi sekali)"
-        )
         try:
             df = analyzer.load_and_preprocess_data(data_path)
             analyzer.train_and_evaluate_model(df)
