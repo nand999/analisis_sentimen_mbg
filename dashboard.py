@@ -12,7 +12,12 @@ import warnings
 from dateutil import parser as date_parser
 from datetime import datetime
 import re
+import os
 warnings.filterwarnings('ignore')
+
+# Base directory: folder tempat dashboard.py berada
+# Ini memastikan path file benar di Streamlit Cloud maupun lokal
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Set font untuk mendukung bahasa Indonesia
 plt.rcParams['font.family'] = 'DejaVu Sans'
@@ -49,21 +54,29 @@ st.markdown("""
 def load_data():
     """Load dataset yang sudah diproses"""
     try:
-        df = pd.read_csv('mbg_processed.csv')
+        filepath = os.path.join(BASE_DIR, 'mbg_processed.csv')
+        df = pd.read_csv(filepath)
         return df
     except FileNotFoundError:
         st.error("File mbg_processed.csv tidak ditemukan. Jalankan sentiment_model.py terlebih dahulu.")
+        return None
+    except Exception as e:
+        st.error(f"Error memuat data: {str(e)}")
         return None
 
 @st.cache_resource
 def load_model():
     """Load model yang sudah dilatih"""
     try:
+        model_path = os.path.join(BASE_DIR, 'sentiment_model.pkl')
         analyzer = SentimentAnalyzer()
-        analyzer.load_model('sentiment_model.pkl')
+        analyzer.load_model(model_path)
         return analyzer
     except FileNotFoundError:
-        st.error("Model tidak ditemukan. Jalankan sentiment_model.py terlebih dahulu.")
+        st.error(f"Model tidak ditemukan di: {os.path.join(BASE_DIR, 'sentiment_model.pkl')}. Jalankan sentiment_model.py terlebih dahulu.")
+        return None
+    except Exception as e:
+        st.error(f"Error memuat model: {str(e)}")
         return None
 
 def create_pie_chart(df):
@@ -580,8 +593,8 @@ def show_main_dashboard(df):
     st.header("📋 Dataset yang Digunakan untuk Training Model")
     
     try:
-        # Load dataset kolom_lengkap.csv
-        dataset_path = 'data_mbg_labelled.csv'
+        # Load dataset
+        dataset_path = os.path.join(BASE_DIR, 'data_mbg_labelled.csv')
         df_dataset = pd.read_csv(dataset_path)
         
         # Pilih kolom yang dibutuhkan
@@ -617,7 +630,8 @@ def show_main_dashboard(df):
     
     try:
         import json
-        with open('model_metrics.json', 'r') as f:
+        metrics_path = os.path.join(BASE_DIR, 'model_metrics.json')
+        with open(metrics_path, 'r') as f:
             metrics = json.load(f)
         
         # Display key metrics
