@@ -69,3 +69,7 @@ Thumbs.db
 # Brain/artifact directory (jika ada)
 .gemini/
 brain/
+
+# model lama
+sentiment_model_lama*.py
+

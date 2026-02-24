@@ -846,14 +846,17 @@ def show_preprocessing_demo(analyzer):
         value="MBG sangat bermanfaat bagi anak-anak dan orangtua!😊"
     )
     
-    # Hanya tampilkan jika ada input yang tidak kosong
-    if demo_text.strip():
-        # Cek apakah input hanya simbol/tanda baca
-        cleaned_for_check = re.sub(r'[^\w\s]', '', demo_text).strip()
-        if not cleaned_for_check:
-            st.warning("⚠️ Input hanya berisi simbol atau tanda baca. Sistem akan tetap memproses tetapi hasil mungkin kosong setelah pembersihan.")
-        
-        show_preprocessing_steps(analyzer, demo_text)
+    if st.button("🔍 Jalankan Preprocessing", type="primary"):
+        # Validasi input kosong
+        if not demo_text.strip():
+            st.warning("⚠️ Silakan masukkan teks terlebih dahulu.")
+        else:
+            # Cek apakah input hanya simbol/tanda baca
+            cleaned_for_check = re.sub(r'[^\w\s]', '', demo_text).strip()
+            if not cleaned_for_check:
+                st.warning("⚠️ Input hanya berisi simbol atau tanda baca. Sistem akan tetap memproses tetapi hasil mungkin kosong setelah pembersihan.")
+            
+            show_preprocessing_steps(analyzer, demo_text)
         
         # Penjelasan setiap tahap
         st.subheader("📚 Penjelasan Tahapan:")

@@ -1,6 +1,6 @@
 # Analisis Sentimen Program MBG (Makan Bergizi Gratis)
 
-Dashboard analisis sentimen berbahasa Indonesia untuk menganalisis opini publik terhadap Program Makan Bergizi Gratis (MBG) menggunakan Support Vector Machine (SVM).
+Dashboard analisis sentimen berbahasa Indonesia untuk menganalisis opini publik terhadap Program Makan Bergizi Gratis (MBG) menggunakan Support Vector Machine (SVM) kernel Radial Basis Function (RBF) dan pembobotan TF-IDF.
 
 ## Deskripsi
 
@@ -46,7 +46,7 @@ Aplikasi web berbasis Streamlit untuk melakukan analisis sentimen terhadap teks 
 
 1. Clone repository:
 ```bash
-git clone https://github.com/username/analisis-sentimen-mbg.git
+git clone https://github.com/nand999/analisis-sentimen-mbg-svm.git
 cd analisis-sentimen-mbg
 ```
 
@@ -125,7 +125,7 @@ text,created_at
 
 ## Model
 
-- **Algoritma**: Support Vector Machine (SVM) dengan kernel linear
+- **Algoritma**: Support Vector Machine (SVM) dengan kernel Radial Basis Function (RBF)
 - **Features**: TF-IDF Vectorization
 - **Dataset**: 1,906 data tweet tentang Program MBG
   - Positif: 793 data
@@ -152,14 +152,6 @@ Lihat `requirements.txt` untuk daftar lengkap.
 - Data dengan confidence score di bawah threshold tidak dimasukkan dalam analisis utama
 - Default threshold: 0.5 (50%)
 - Dapat disesuaikan melalui slider di halaman Analisis CSV
-
-### Text Wrapping
-- Semua tabel menggunakan text wrapping otomatis
-- Teks panjang akan ditampilkan lengkap tanpa terpotong
-
-### Analisis Temporal
-- Hanya tahun valid (1900-2100) yang ditampilkan di chart
-- Deteksi otomatis berbagai format tanggal
 
 ## Lisensi
 
